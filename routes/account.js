@@ -3,6 +3,16 @@ const express = require("express");
 const router = express.Router();
 const Account = require("../models/Account");
 
+router.patch("/api/accounts/:id", function(req, res){
+  Account.findOne({_id: req.params.id})
+  .then( function(account){
+    account.name = req.body.name;
+    account.save()
+    .then(function(account){
+      res.json({account: account})
+    })
+  })
+})
 router.post("/api/accounts", function(req, res){
   const account = new Account()
   account.name = req.body.name;
