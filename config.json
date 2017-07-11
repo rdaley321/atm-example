@@ -1,0 +1,8 @@
+{
+  "development": {
+    "mongoUrl": "mongodb://127.0.0.1:27017/atm"
+  },
+  "test": {
+    "mongoUrl": "mongodb://127.0.0.1:27017/atm_test"
+  }
+}
