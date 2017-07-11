@@ -27,6 +27,7 @@ describe("Account Balance", function(){
 
       supertest(app)
       .patch(`/api/accounts/${account._id}`)
+      .auth(account.username, account.password)
       .send({name: "JWO NEW NAME"})
       .expect(200)
       .expect( function(res){
@@ -52,6 +53,7 @@ describe("Account Balance", function(){
 
       supertest(app)
       .get(`/api/accounts/${account._id}`)
+      .auth(account.username, account.password)
       .expect(200)
       .expect("content-type", /json/)
       .expect(function(res){

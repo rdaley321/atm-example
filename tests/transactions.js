@@ -29,6 +29,7 @@ describe("depositing funds", function(){
     .then( function(account){
       supertest(app)
       .post(`/api/accounts/${account._id}/withdraw`)
+      .auth(account.username, account.password)
       .send({amount: 100})
       .expect(200)
       .expect(function(res){
@@ -57,6 +58,7 @@ describe("depositing funds", function(){
     .then( function(account){
       supertest(app)
       .post(`/api/accounts/${account._id}/withdraw`)
+      .auth(account.username, account.password)
       .send({
         amount: 2.50
       })
@@ -84,6 +86,7 @@ describe("depositing funds", function(){
       }
       supertest(app)
       .post(`/api/accounts/${account._id}/deposit`)
+      .auth(account.username, account.password)
       .send(jsonData)
       .expect(200)
       .expect(function(res){
