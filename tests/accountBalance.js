@@ -9,6 +9,16 @@ const Account = require("../models/Account")
 describe("Account Balance", function(){
 
   before(function(){
+
+    const account = new Account()
+    account.username = "dorton"
+    account.password = "12345678"
+    account.name = "Dorton"
+    account.city = "Pearland"
+    account.balance = 509324752893745
+    account.save()
+
+
     // console.log("This gets run before everything")
   })
   after(function(){
@@ -41,32 +51,24 @@ describe("Account Balance", function(){
 
 
   it("should return the current account balance", function(done){
-
-    const account = new Account()
-    account.username = "theusername"
-    account.password = "12345678"
-    account.name = "The Name"
-    account.city = "Screwston"
-    account.balance = 5
-    account.save()
+    let dorton = false;
+    Account.findOne({username: "dorton"})
+    .then(function(newDortonAccount){
+      dorton = newDortonAccount
+      const account = new Account()
+      account.username = "eviljwo"
+      account.password = "12345678"
+      account.name = "EvilWo"
+      account.city = "land of sugar"
+      account.balance = 5
+      return account.save()
+    })
     .then( function(account){
 
       supertest(app)
-      .get(`/api/accounts/${account._id}`)
+      .get(`/api/accounts/${dorton._id}`)
       .auth(account.username, account.password)
-      .expect(200)
-      .expect("content-type", /json/)
-      .expect(function(res){
-        // {
-        //   account: {
-        //     _id: 453452345234532
-        //     balance: 5
-        //   }
-        // }
-
-        assert.equal(res.body.account._id, account._id)
-        assert.equal(res.body.account.balance, 5)
-      })
+      .expect(401)
       .end(done)
     })
   })

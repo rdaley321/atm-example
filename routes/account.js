@@ -4,7 +4,7 @@ const router = express.Router();
 const Account = require("../models/Account");
 
 router.patch("/api/accounts/:id", function(req, res){
-  Account.findOne({_id: req.params.id})
+  Account.findOne({_id: req.params.id, username: req.user.username})
   .then( function(account){
     account.name = req.body.name;
     account.save()
@@ -16,9 +16,13 @@ router.patch("/api/accounts/:id", function(req, res){
 
 router.get("/api/accounts/:id",
   function(req, res){
-    Account.findOne({_id: req.params.id})
+    Account.findOne({_id: req.params.id, username: req.user.username})
     .then( function(account){
-      res.json({account: account})
+      if (account){
+        res.json({account: account})
+      } else {
+        res.status(401).send("NICE TRY")
+      }
     })
   }
 )
@@ -33,7 +37,7 @@ function validateProperAmount(req,res,next){
 
 router.post("/api/accounts/:id/deposit", validateProperAmount, function(req, res){
 
-  Account.findOne({_id: req.params.id})
+  Account.findOne({_id: req.params.id, username: req.user.username})
   .then( function(account){
     account.balance += req.body.amount;
     account.save()
@@ -45,7 +49,7 @@ router.post("/api/accounts/:id/deposit", validateProperAmount, function(req, res
 
 router.post("/api/accounts/:id/withdraw", validateProperAmount, function(req, res){
 
-  Account.findOne({_id: req.params.id})
+  Account.findOne({_id: req.params.id, username: req.user.username})
   .then( function(account){
     responseObject = {}
     account.balance -= req.body.amount;
