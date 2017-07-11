@@ -24,10 +24,19 @@ router.post("/api/accounts/:id/deposit", function(req, res){
 router.post("/api/accounts/:id/withdraw", function(req, res){
   Account.findOne({_id: req.params.id})
   .then( function(account){
+    responseObject = {}
     account.balance -= req.body.amount;
+
+    if (account.balance < 0){
+      // Add dem fees
+      account.balance -= 35
+      // Add errorMessage to our responseObject
+      responseObject.errorMessage = "Overdraft charged. Party On."
+    }
     account.save()
     .then( function(savedAccount){
-      res.json({account: savedAccount})
+      responseObject.account = savedAccount
+      res.json(responseObject)
     })
   })
 })
