@@ -12,14 +12,18 @@ describe("Account Balance", function(){
     // console.log("This gets run before everything")
   })
   after(function(){
-    Account.remove()
+    Account.deleteMany()
     // console.log("This gets run when all its are done")
   })
 
 
   it("should return the current account balance", function(done){
 
-    account = new Account()
+    const account = new Account()
+    account.username = "theusername"
+    account.password = "12345678"
+    account.name = "The Name"
+    account.city = "Screwston"
     account.balance = 5
     account.save()
     .then( function(account){

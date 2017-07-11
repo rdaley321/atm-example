@@ -14,12 +14,16 @@ describe("depositing funds", function(){
     // console.log("This gets run before everything")
   })
   after(function(){
-    Account.remove()
+    Account.deleteMany()
     // console.log("This gets run when all its are done")
   })
 
   it("fees you for overdraft and does not give your money", function(done){
-    account = new Account()
+    const account = new Account()
+    account.username = "theusername"
+    account.password = "12345678"
+    account.name = "The Name"
+    account.city = "Screwston"
     account.balance = 5
     account.save()
     .then( function(account){
@@ -43,7 +47,11 @@ describe("depositing funds", function(){
   })
 
   it("properly withdraws when posting to /api/accounts/:id/withdraws", function(done){
-    account = new Account()
+    const account = new Account()
+    account.username = "theusername"
+    account.password = "12345678"
+    account.name = "The Name"
+    account.city = "Screwston"
     account.balance = 5
     account.save()
     .then( function(account){
@@ -63,6 +71,10 @@ describe("depositing funds", function(){
   it("properly deposits when posting to /api/accounts/:id/deposit", function(done){
 
     account = new Account()
+    account.username = "theusername"
+    account.password = "12345678"
+    account.name = "The Name"
+    account.city = "Screwston"
     account.balance = 5
     account.save()
     .then( function(account){
