@@ -28,6 +28,23 @@ describe("Account Registration", function(){
     })
   })
 
+  it("gives 422 with repeated username", function(done){
+    registrationData = {
+      username: account.username,
+      name: account.name,
+      city: account.city,
+      password: account.password
+    }
+    supertest(app)
+    .post("/api/accounts")
+    .send(registrationData)
+    .expect(422)
+    .expect(function(res){
+      assert(res.body.error)
+    })
+    .end(done)
+  })
+
 
   it("gives 422 with invalid data", function(done){
     registrationData = {
