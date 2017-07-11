@@ -8,19 +8,26 @@ const Account = require("../models/Account")
 
 describe("Account Registration", function(){
 
-  before(function(){
-    const account = new Account()
-    account.username = "jwo"
-    account.password = "12345678"
-    account.name = "The Name"
-    account.city = "Screwston"
-    account.balance = 5
-    account.save()
+  let account = false;
+  afterEach(function(done){
+    Account.deleteMany().then( function(){
+      done()
+    })
   })
-  after(function(){
-    Account.deleteMany()
-    // console.log("This gets run when all its are done")
+  beforeEach(function(done){
+    const a = new Account()
+    a.username = "theusername"
+    a.password = "12345678"
+    a.name = "The Name"
+    a.city = "Screwston"
+    a.balance = 5
+    a.save()
+    .then( function(a){
+      account = a;
+      done();
+    })
   })
+
 
   it("gives 422 with invalid data", function(done){
     registrationData = {

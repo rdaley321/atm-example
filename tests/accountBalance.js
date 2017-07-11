@@ -7,69 +7,59 @@ const app = require("../app")
 const Account = require("../models/Account")
 
 describe("Account Balance", function(){
+  let account = false;
+  let dorton = false;
 
-  before(function(){
-
-    const account = new Account()
-    account.username = "dorton"
-    account.password = "12345678"
-    account.name = "Dorton"
-    account.city = "Pearland"
-    account.balance = 509324752893745
-    account.save()
-
-
-    // console.log("This gets run before everything")
+  afterEach(function(done){
+    Account.deleteMany().then( function(){
+      done()
+    })
   })
-  after(function(){
-    Account.deleteMany()
-    // console.log("This gets run when all its are done")
+  beforeEach(function(done){
+
+    const d = new Account()
+    d.username = "dorton"
+    d.password = "12345678"
+    d.name = "Dorton"
+    d.city = "Pearland"
+    d.balance = 509324752893745
+    d.save()
+    .then( function(d){
+      dorton = d
+    })
+    .then( function(){
+      const a = new Account()
+      a.username = "theusername"
+      a.password = "12345678"
+      a.name = "The Name"
+      a.city = "Screwston"
+      a.balance = 5
+      a.save()
+      .then( function(a){
+        account = a;
+        done();
+      })
+    })
   })
 
   it("can update name data", function(done){
-    const account = new Account()
-    account.username = "theusername"
-    account.password = "12345678"
-    account.name = "The Name"
-    account.city = "Screwston"
-    account.balance = 5
-    account.save().then(function(account){
 
-      supertest(app)
-      .patch(`/api/accounts/${account._id}`)
-      .auth(account.username, account.password)
-      .send({name: "JWO NEW NAME"})
-      .expect(200)
-      .expect( function(res){
-        assert.equal(res.body.account.name, "JWO NEW NAME")
-      })
-      .end(done)
-
+    supertest(app)
+    .patch(`/api/accounts/${account._id}`)
+    .auth(account.username, account.password)
+    .send({name: "JWO NEW NAME"})
+    .expect(200)
+    .expect( function(res){
+      assert.equal(res.body.account.name, "JWO NEW NAME")
     })
-
+    .end(done)
   })
 
-
   it("should return the current account balance", function(done){
-    let dorton = false;
-    Account.findOne({username: "dorton"})
-    .then(function(newDortonAccount){
-      dorton = newDortonAccount
-      const account = new Account()
-      account.username = "eviljwo"
-      account.password = "12345678"
-      account.name = "EvilWo"
-      account.city = "land of sugar"
-      account.balance = 5
-      return account.save()
-    })
-    .then( function(account){
-
-      supertest(app)
-      .get(`/api/accounts/${dorton._id}`)
-      .auth(account.username, account.password)
-      .expect(401)
-      .end(done)
-    })
+    supertest(app)
+    .get(`/api/accounts/${dorton._id}`)
+    .auth(account.username, account.password)
+    .expect(401)
+    .end(done)
   })
 })
