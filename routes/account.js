@@ -10,4 +10,15 @@ router.get("/api/accounts/:id", function(req, res){
   })
 })
 
+router.post("/api/accounts/:id/deposit", function(req, res){
+  Account.findOne({_id: req.params.id})
+  .then( function(account){
+    account.balance += req.body.amount;
+    account.save()
+    .then( function(savedAccount){
+      res.json({account: savedAccount})
+    })
+  })
+})
+
 module.exports = router;

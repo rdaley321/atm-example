@@ -3,11 +3,12 @@ const app = express();
 const mongoose = require("mongoose");
 const statusRoutes = require("./routes/status");
 const accountRoutes = require("./routes/account");
-
+const bodyParser = require("body-parser");
 // Connect and stuff
 mongoose.Promise = require("bluebird");
 mongoose.connect("mongodb://127.0.0.1:27017/atm")
 
+app.use(bodyParser.json())
 app.use(statusRoutes)
 app.use(accountRoutes)
 
