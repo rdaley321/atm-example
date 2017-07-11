@@ -9,6 +9,15 @@ const app = require("../app")
 const Account = require("../models/Account")
 
 describe("depositing funds", function(){
+
+  before(function(){
+    // console.log("This gets run before everything")
+  })
+  after(function(){
+    Account.remove()
+    // console.log("This gets run when all its are done")
+  })
+
   it("updates balance when posting to /api/accounts/:id/deposit", function(done){
 
     account = new Account()
@@ -27,9 +36,6 @@ describe("depositing funds", function(){
         assert.equal(res.body.account.balance, 105)
       })
       .end(done)
-
-      /// Clean up the account we created
-      Account.deleteOne({_id: account._id})
     })
 
   })
