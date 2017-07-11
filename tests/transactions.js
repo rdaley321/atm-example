@@ -18,7 +18,25 @@ describe("depositing funds", function(){
     // console.log("This gets run when all its are done")
   })
 
-  it("updates balance when posting to /api/accounts/:id/deposit", function(done){
+  it("properly withdraws when posting to /api/accounts/:id/withdraws", function(done){
+    account = new Account()
+    account.balance = 5
+    account.save()
+    .then( function(account){
+      supertest(app)
+      .post(`/api/accounts/${account._id}/withdraw`)
+      .send({
+        amount: 2.50
+      })
+      .expect(200)
+      .expect(function(res){
+        assert.equal(res.body.account.balance, 2.50)
+      })
+      .end(done)
+    })
+  })
+
+  it("properly deposits when posting to /api/accounts/:id/deposit", function(done){
 
     account = new Account()
     account.balance = 5
