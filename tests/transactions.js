@@ -18,6 +18,49 @@ describe("depositing funds", function(){
     // console.log("This gets run when all its are done")
   })
 
+  it("handles gracefully when you deposit a negative number", function(done){
+    const account = new Account()
+    account.username = "theusername"
+    account.password = "12345678"
+    account.name = "The Name"
+    account.city = "Screwston"
+    account.balance = 5
+    account.save()
+    .then( function(account){
+      supertest(app)
+      .post(`/api/accounts/${account._id}/deposit`)
+      .auth(account.username, account.password)
+      .send({amount: -50})
+      .expect(422)
+      .expect(function(res){
+        assert.include(res.body.errorMessage, "Invalid Transation Entry")
+      })
+      .end(done)
+    })
+  })
+
+
+  it("handles gracefully when you withdraw a negative number", function(done){
+    const account = new Account()
+    account.username = "theusername"
+    account.password = "12345678"
+    account.name = "The Name"
+    account.city = "Screwston"
+    account.balance = 5
+    account.save()
+    .then( function(account){
+      supertest(app)
+      .post(`/api/accounts/${account._id}/withdraw`)
+      .auth(account.username, account.password)
+      .send({amount: -50})
+      .expect(422)
+      .expect(function(res){
+        assert.include(res.body.errorMessage, "Invalid Transation Entry")
+      })
+      .end(done)
+    })
+  })
+
   it("fees you for overdraft and does not give your money", function(done){
     const account = new Account()
     account.username = "theusername"

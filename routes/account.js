@@ -23,7 +23,16 @@ router.get("/api/accounts/:id",
   }
 )
 
-router.post("/api/accounts/:id/deposit", function(req, res){
+function validateProperAmount(req,res,next){
+  if (req.body.amount < 0){
+    res.status(422).json({errorMessage: "Invalid Transation Entry"})
+  } else {
+    next()
+  }
+}
+
+router.post("/api/accounts/:id/deposit", validateProperAmount, function(req, res){
+
   Account.findOne({_id: req.params.id})
   .then( function(account){
     account.balance += req.body.amount;
@@ -34,7 +43,8 @@ router.post("/api/accounts/:id/deposit", function(req, res){
   })
 })
 
-router.post("/api/accounts/:id/withdraw", function(req, res){
+router.post("/api/accounts/:id/withdraw", validateProperAmount, function(req, res){
+
   Account.findOne({_id: req.params.id})
   .then( function(account){
     responseObject = {}
